@@ -1,6 +1,12 @@
 {
   "extends": "expo/tsconfig.base",
-  "compilerOptions": {},
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "jsx": "react-native",
+    "strict": true,
+    "esModuleInterop": true
+  },
   "include": [
     "**/*.ts",
     "**/*.tsx"
