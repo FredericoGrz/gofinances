@@ -15,6 +15,11 @@ import {
 import theme from './src/global/styles/theme';
 import { AppRoutes } from './src/routes/app.routes';
 import { View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { AuthContext } from './src/AuthContenxt';
+
+import { SignIn } from './src/screens/SignIn';
+import { AuthProvider } from './src/hooks/auth';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -38,10 +43,13 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <NavigationContainer>
+        <StatusBar style="light" />
         <View
           onLayout={onLayoutRootView}
           style={{ width: '100%', height: '100%' }}>
-          <AppRoutes />
+          <AuthProvider>
+            <SignIn />
+          </AuthProvider>
         </View>
       </NavigationContainer>
     </ThemeProvider>

@@ -30,7 +30,7 @@ interface TransactionData {
   name: string;
   amount: string;
   category: string;
-  date: string;
+  data: string;
 }
 
 interface CategoryData {
@@ -43,7 +43,7 @@ interface CategoryData {
 }
 
 export function Summary() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>(
     [],
@@ -58,13 +58,17 @@ export function Summary() {
   }
 
   async function loadData() {
+    setIsLoading(true);
     const dataKey = '@gofinance:transactions';
 
     const response = await AsyncStorage.getItem(dataKey);
     const responseFormatted = response ? JSON.parse(response) : [];
 
     const expensives = responseFormatted.filter(
-      (expensive: TransactionData) => expensive.type === 'negative',
+      (expensive: TransactionData) =>
+        expensive.type === 'negative' &&
+        new Date(expensive.data).getMonth() === selectedDate.getMonth() &&
+        new Date(expensive.data).getFullYear() === selectedDate.getFullYear(),
     );
 
     const expensivesTotal = expensives.reduce(
@@ -110,14 +114,10 @@ export function Summary() {
     setIsLoading(false);
   }
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
       loadData();
-    }, []),
+    }, [selectedDate]),
   );
 
   return (
